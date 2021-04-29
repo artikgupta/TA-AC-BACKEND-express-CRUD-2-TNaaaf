@@ -19,6 +19,8 @@ router.post("/", (req,res,next)=>{
 })
 
 
+
+
 router.get("/",(req,res,next)=>{ // find always return an array
   Article.find((err, articles)=>{
     if(err) return next(err)
@@ -35,6 +37,8 @@ router.get("/:id",(req,res,next)=>{
   })
 })
 
+// delete
+
 router.get("/:id/delete",(req,res,next)=>{
   let id = req.params.id;
   Article.findByIdAndDelete(id,(err,article)=>{
@@ -42,6 +46,8 @@ router.get("/:id/delete",(req,res,next)=>{
     res.redirect("/articles")
   })
 })
+
+// edit
 
 router.get("/:id/edit",(req,res,next)=>{
   let id = req.params.id;
@@ -54,6 +60,27 @@ router.get("/:id/edit",(req,res,next)=>{
 router.post("/:id/edit",(req,res, next)=>{
   let id = req.params.id;
   Article.findByIdAndUpdate(id,req.body,(err, updateArticle)=>{
+    if(err) return next(err);
+    res.redirect('/articles/' + id);
+  })
+})
+
+// increment
+
+router.post("/:id/likes",(req,res, next)=>{
+  let id = req.params.id;
+  Article.findByIdAndUpdate(id,{$inc:{$likes:1}},(err,updateArticle)=>{
+    if(err) return next(err);
+    res.redirect('/articles/' + id);
+  })
+})
+
+// decrement
+
+
+router.post("/:id/likes",(req,res, next)=>{
+  let id = req.params.id;
+  Article.findByIdAndUpdate(id,{$inc:{$likes:-1}},(err,updateArticle)=>{
     if(err) return next(err);
     res.redirect('/articles/' + id);
   })
